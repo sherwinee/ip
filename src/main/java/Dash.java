@@ -1,17 +1,43 @@
 import java.util.Scanner;
+import java.util.ArrayList;
+import java.util.stream.IntStream;
 
 public class Dash {
-    public static void println() {
-        String line = "____________________________________________________________";
-        System.out.println(line);
+    public static final String botName = "Dash";
+    private static ArrayList<String> msgList = new ArrayList<>();
+    private static ArrayList<String> botMsgList = new ArrayList<>();
+
+    public static void botAddLine(String msg) {
+        botMsgList.add(msg);
     }
+
+    public static void botPrint() {
+        String line = "    ____________________________________________________________";
+        String indent = "     ";
+        System.out.println(line);
+        botMsgList.stream()
+                .map(msg -> indent + msg)
+                .forEach(newMsg -> System.out.println(newMsg));
+        System.out.println(line);
+        botMsgList.clear();
+    }
+
+    public static void addMsg(String msg) {
+        msgList.add(msg);
+        botAddLine("added: " + msg);
+        botPrint();
+    }
+
+    public static void printList() {
+        IntStream.range(0, msgList.size())
+                .forEach(i -> botAddLine((i + 1) + ". " + msgList.get(i)));
+        botPrint();
+    }
+
     public static void main(String[] args) {
-        String botName = "Dash";
-        String line = "____________________________________________________________";
-        println();
-        System.out.println("Hello! I'm " + botName);
-        System.out.println("What can I do for you?");
-        println();
+        botAddLine("Hello! I'm " + botName);
+        botAddLine("What you want me do today?");
+        botPrint();
 
         Scanner scan = new Scanner(System.in);
         while (true) {
@@ -20,13 +46,15 @@ public class Dash {
             if (msg.equals("bye")) {
                 break;
             }
-            println();
-            System.out.println(msg);
-            println();
+            else if (msg.equals("list")) {
+                printList();
+            }
+            else {
+                addMsg(msg);
+            }
         }
 
-        println();
-        System.out.println("Bye. Hope to see you soon!");
-        println();
+        botAddLine("Bye bye! See you ah!");
+        botPrint();
     }
 }
