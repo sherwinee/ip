@@ -1,6 +1,7 @@
 import java.util.Scanner;
 import java.util.ArrayList;
 import java.util.stream.IntStream;
+import java.util.NoSuchElementException;
 
 public class Dash {
     public static final String botName = "Dash";
@@ -69,7 +70,13 @@ public class Dash {
         Scanner scan = new Scanner(System.in);
         while (true) {
             System.out.println();
-            String msg = scan.nextLine();
+            String msg;
+            try {
+                msg = scan.nextLine();
+            } catch (NoSuchElementException e) {
+                break;
+            }
+
             if (msg.equals("bye")) {
                 break;
             }
