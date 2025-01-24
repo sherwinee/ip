@@ -2,6 +2,7 @@ import java.util.Scanner;
 import java.util.ArrayList;
 import java.util.stream.IntStream;
 import java.util.NoSuchElementException;
+import java.lang.IllegalArgumentException;
 
 public class Dash {
     public static final String botName = "Dash";
@@ -24,13 +25,21 @@ public class Dash {
     }
 
     public static void addTodo(String msg) {
-        String desc = msg.substring(5);
-        Task task = new Todo(msg);
-        taskList.add(task);
-        botAddLine("Ok! I add this task already:");
-        botAddLine("  " + task.toString());
-        botAddLine("Now your list got " + taskList.size() + " tasks.");
-        botPrint();
+        try {
+            if (msg.length() < 6) {
+                throw new IllegalArgumentException();
+            }
+            String desc = msg.substring(5);
+            Task task = new Todo(msg);
+            taskList.add(task);
+            botAddLine("Ok! I add this task already:");
+            botAddLine("  " + task.toString());
+            botAddLine("Now your list got " + taskList.size() + " tasks.");
+            botPrint();
+        } catch (IllegalArgumentException e) {
+            botAddLine("Aiya! Your todo description cannot be empty!");
+            botPrint();
+        }
     }
 
     public static void addDeadline(String msg) {
@@ -82,7 +91,7 @@ public class Dash {
             }
             else if (msg.equals("list")) {
                 printTaskList();
-            } else if (msg.startsWith("mark ")) {
+            } else if (msg.startsWith("mark")) {
                 try {
                     int taskNumber = Integer.parseInt(msg.substring(5));
                     Task task = taskList.get(taskNumber - 1);
@@ -94,7 +103,7 @@ public class Dash {
                     botAddLine("Invalid number format!");
                     botPrint();
                 }
-            } else if (msg.startsWith("unmark ")) {
+            } else if (msg.startsWith("unmark")) {
                 try {
                     int taskNumber = Integer.parseInt(msg.substring(7));
                     Task task = taskList.get(taskNumber - 1);
@@ -106,12 +115,15 @@ public class Dash {
                     botAddLine("Invalid number format!");
                     botPrint();
                 }
-            } else if (msg.startsWith("todo ")) {
+            } else if (msg.startsWith("todo")) {
                 addTodo(msg);
-            } else if (msg.startsWith("deadline ")) {
+            } else if (msg.startsWith("deadline")) {
                 addDeadline(msg);
-            } else if (msg.startsWith("event ")) {
+            } else if (msg.startsWith("event")) {
                 addEvent(msg);
+            } else {
+                botAddLine("Alamak! I dont know what that means :/");
+                botPrint();
             }
         }
 
