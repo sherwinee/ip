@@ -26,7 +26,7 @@ public class Dash {
         String desc = msg.substring(5);
         Task task = new Todo(msg);
         taskList.add(task);
-        botAddLine("Ok! I add this task already:" + msg);
+        botAddLine("Ok! I add this task already:");
         botAddLine("  " + task.toString());
         botAddLine("Now your list got " + taskList.size() + " tasks.");
         botPrint();
@@ -37,7 +37,7 @@ public class Dash {
         String by = msg.substring(msg.indexOf("/by ") + 4);
         Task task = new Deadline(desc, by);
         taskList.add(task);
-        botAddLine("Ok! I add this task already:" + msg);
+        botAddLine("Ok! I add this task already:");
         botAddLine("  " + task.toString());
         botAddLine("Now your list got " + taskList.size() + " tasks.");
         botPrint();
@@ -49,7 +49,7 @@ public class Dash {
         String to = msg.substring(msg.indexOf("/to ") + 4);
         Task task = new Event(desc, from, to);
         taskList.add(task);
-        botAddLine("Ok! I add this task already:" + msg);
+        botAddLine("Ok! I add this task already:");
         botAddLine("  " + task.toString());
         botAddLine("Now your list got " + taskList.size() + " tasks.");
         botPrint();
