@@ -24,6 +24,24 @@ public class Dash {
         botMsgList.clear();
     }
 
+    public static void deleteTask(String msg) {
+        try {
+            if (msg.length() < 8) {
+                throw new IllegalArgumentException();
+            }
+            int taskNumber = Integer.parseInt(msg.substring(7));
+            Task task = taskList.get(taskNumber - 1);
+            taskList.remove(taskNumber - 1);
+            botAddLine("Ok! I delete this task already:");
+            botAddLine("  " + task.toString());
+            botAddLine("Now your list got " + taskList.size() + " tasks.");
+            botPrint();
+        } catch (IllegalArgumentException e) {
+            botAddLine("Aiya! Your task name cannot be empty!");
+            botPrint();
+        }
+    }
+
     public static void addTodo(String msg) {
         try {
             if (msg.length() < 6) {
@@ -115,6 +133,8 @@ public class Dash {
                     botAddLine("Invalid number format!");
                     botPrint();
                 }
+            } else if (msg.startsWith("delete")) {
+                deleteTask(msg);
             } else if (msg.startsWith("todo")) {
                 addTodo(msg);
             } else if (msg.startsWith("deadline")) {
