@@ -22,8 +22,8 @@ public class Dash {
         botMsgList.clear();
     }
 
-    public static void addTask(String msg) {
-        taskList.add(new Task(msg));
+    public static void addTodo(String msg) {
+        taskList.add(new Todo(msg));
         botAddLine("added: " + msg);
         botPrint();
     }
@@ -73,7 +73,7 @@ public class Dash {
                     botPrint();
                 }
             } else {
-                addTask(msg);
+                addTodo(msg);
             }
         }
 
