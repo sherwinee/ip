@@ -23,8 +23,35 @@ public class Dash {
     }
 
     public static void addTodo(String msg) {
-        taskList.add(new Todo(msg));
-        botAddLine("added: " + msg);
+        String desc = msg.substring(5);
+        Task task = new Todo(msg);
+        taskList.add(task);
+        botAddLine("Ok! I add this task already:" + msg);
+        botAddLine("  " + task.toString());
+        botAddLine("Now your list got " + taskList.size() + " tasks.");
+        botPrint();
+    }
+
+    public static void addDeadline(String msg) {
+        String desc = msg.substring(9, msg.indexOf("/by "));
+        String by = msg.substring(msg.indexOf("/by ") + 4);
+        Task task = new Deadline(desc, by);
+        taskList.add(task);
+        botAddLine("Ok! I add this task already:" + msg);
+        botAddLine("  " + task.toString());
+        botAddLine("Now your list got " + taskList.size() + " tasks.");
+        botPrint();
+    }
+
+    public static void addEvent(String msg) {
+        String desc = msg.substring(6, msg.indexOf("/from "));
+        String from = msg.substring(msg.indexOf("/from ") + 6, msg.indexOf("/to "));
+        String to = msg.substring(msg.indexOf("/to ") + 4);
+        Task task = new Event(desc, from, to);
+        taskList.add(task);
+        botAddLine("Ok! I add this task already:" + msg);
+        botAddLine("  " + task.toString());
+        botAddLine("Now your list got " + taskList.size() + " tasks.");
         botPrint();
     }
 
@@ -72,8 +99,12 @@ public class Dash {
                     botAddLine("Invalid number format!");
                     botPrint();
                 }
-            } else {
+            } else if (msg.startsWith("todo ")) {
                 addTodo(msg);
+            } else if (msg.startsWith("deadline ")) {
+                addDeadline(msg);
+            } else if (msg.startsWith("event ")) {
+                addEvent(msg);
             }
         }
 
