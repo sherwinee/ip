@@ -24,6 +24,39 @@ public class Dash {
         botMsgList.clear();
     }
 
+    public static void printDefaultMessage() {
+        botAddLine("Alamak! I dont know what that means :/");
+        botPrint();
+    }
+
+    public static void markTask(String msg) {
+        try {
+            int taskNumber = Integer.parseInt(msg.substring(5));
+            Task task = taskList.get(taskNumber - 1);
+            task.markDone();
+            botAddLine("Ok! I mark this task as done liao!");
+            botAddLine("  " + task);
+            botPrint();
+        } catch (NumberFormatException e) {
+            botAddLine("Invalid number format!");
+            botPrint();
+        }
+    }
+
+    public static void unmarkTask(String msg) {
+        try {
+            int taskNumber = Integer.parseInt(msg.substring(7));
+            Task task = taskList.get(taskNumber - 1);
+            task.markUndone();
+            botAddLine("Ok! I mark this task as not done yet already!");
+            botAddLine("  " + task);
+            botPrint();
+        } catch (NumberFormatException e) {
+            botAddLine("Invalid number format!");
+            botPrint();
+        }
+    }
+
     public static void deleteTask(String msg) {
         try {
             if (msg.length() < 8) {
@@ -106,33 +139,12 @@ public class Dash {
 
             if (msg.equals("bye")) {
                 break;
-            }
-            else if (msg.equals("list")) {
+            } else if (msg.equals("list")) {
                 printTaskList();
             } else if (msg.startsWith("mark")) {
-                try {
-                    int taskNumber = Integer.parseInt(msg.substring(5));
-                    Task task = taskList.get(taskNumber - 1);
-                    task.markDone();
-                    botAddLine("Ok! I mark this task as done liao!");
-                    botAddLine("  " + task);
-                    botPrint();
-                } catch (NumberFormatException e) {
-                    botAddLine("Invalid number format!");
-                    botPrint();
-                }
+                markTask(msg);
             } else if (msg.startsWith("unmark")) {
-                try {
-                    int taskNumber = Integer.parseInt(msg.substring(7));
-                    Task task = taskList.get(taskNumber - 1);
-                    task.markUndone();
-                    botAddLine("Ok! I mark this task as not done yet already!");
-                    botAddLine("  " + task);
-                    botPrint();
-                } catch (NumberFormatException e) {
-                    botAddLine("Invalid number format!");
-                    botPrint();
-                }
+                unmarkTask(msg);
             } else if (msg.startsWith("delete")) {
                 deleteTask(msg);
             } else if (msg.startsWith("todo")) {
@@ -142,8 +154,7 @@ public class Dash {
             } else if (msg.startsWith("event")) {
                 addEvent(msg);
             } else {
-                botAddLine("Alamak! I dont know what that means :/");
-                botPrint();
+                printDefaultMessage();
             }
         }
 
