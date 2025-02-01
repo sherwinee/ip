@@ -40,6 +40,9 @@ public class Dash {
         } catch (NumberFormatException e) {
             botAddLine("Invalid number format!");
             botPrint();
+        } catch (IndexOutOfBoundsException e) {
+            botAddLine("That task doesn't exist!");
+            botPrint();
         }
     }
 
@@ -53,6 +56,9 @@ public class Dash {
             botPrint();
         } catch (NumberFormatException e) {
             botAddLine("Invalid number format!");
+            botPrint();
+        } catch (IndexOutOfBoundsException e) {
+            botAddLine("That task doesn't exist!");
             botPrint();
         }
     }
@@ -72,6 +78,9 @@ public class Dash {
         } catch (IllegalArgumentException e) {
             botAddLine("Aiya! Your task name cannot be empty!");
             botPrint();
+        } catch (IndexOutOfBoundsException e) {
+            botAddLine("That task doesn't exist!");
+            botPrint();
         }
     }
 
@@ -80,7 +89,10 @@ public class Dash {
             if (msg.length() < 6) {
                 throw new IllegalArgumentException();
             }
-            String desc = msg.substring(5);
+            String desc = msg.substring(5).strip();
+            if (desc.isEmpty()) {
+                throw new IllegalArgumentException();
+            }
             Task task = new Todo(msg);
             taskList.add(task);
             botAddLine("Ok! I add this task already:");
@@ -88,43 +100,69 @@ public class Dash {
             botAddLine("Now your list got " + taskList.size() + " tasks.");
             botPrint();
         } catch (IllegalArgumentException e) {
-            botAddLine("Aiya! Your todo description cannot be empty!");
+            botAddLine("Your todo description cannot be empty!");
             botPrint();
         }
     }
 
     public static void addDeadline(String msg) {
-        String desc = msg.substring(9, msg.indexOf("/by "));
-        String by = msg.substring(msg.indexOf("/by ") + 4);
-        Task task = new Deadline(desc, by);
-        taskList.add(task);
-        botAddLine("Ok! I add this task already:");
-        botAddLine("  " + task.toString());
-        botAddLine("Now your list got " + taskList.size() + " tasks.");
-        botPrint();
+        try {
+            if (msg.length() < 10 || !msg.contains("/by ")) {
+                throw new IllegalArgumentException();
+            }
+            String desc = msg.substring(9, msg.indexOf("/by ")).strip();
+            String by = msg.substring(msg.indexOf("/by ") + 4).strip();
+            if (desc.isEmpty() || by.isEmpty()) {
+                throw new IllegalArgumentException();
+            }
+            Task task = new Deadline(desc, by);
+            taskList.add(task);
+            botAddLine("Ok! I add this task already:");
+            botAddLine("  " + task.toString());
+            botAddLine("Now your list got " + taskList.size() + " tasks.");
+            botPrint();
+        } catch (IllegalArgumentException e) {
+            botAddLine("Your deadline must have a description and /by time!");
+            botPrint();
+        }
     }
 
     public static void addEvent(String msg) {
-        String desc = msg.substring(6, msg.indexOf("/from "));
-        String from = msg.substring(msg.indexOf("/from ") + 6, msg.indexOf("/to "));
-        String to = msg.substring(msg.indexOf("/to ") + 4);
-        Task task = new Event(desc, from, to);
-        taskList.add(task);
-        botAddLine("Ok! I add this task already:");
-        botAddLine("  " + task.toString());
-        botAddLine("Now your list got " + taskList.size() + " tasks.");
-        botPrint();
+        try {
+            if (msg.length() < 6 || !msg.contains("/from ") || !msg.contains("/to ")) {
+                throw new IllegalArgumentException();
+            }
+            String desc = msg.substring(6, msg.indexOf("/from ")).strip();
+            String from = msg.substring(msg.indexOf("/from ") + 6, msg.indexOf("/to ")).strip();
+            String to = msg.substring(msg.indexOf("/to ") + 4).strip();
+            if (desc.isEmpty() || from.isEmpty() || to.isEmpty()) {
+                throw new IllegalArgumentException();
+            }
+            Task task = new Event(desc, from, to);
+            taskList.add(task);
+            botAddLine("Ok! I add this task already:");
+            botAddLine("  " + task.toString());
+            botAddLine("Now your list got " + taskList.size() + " tasks.");
+            botPrint();
+        } catch (IllegalArgumentException e) {
+            botAddLine("Your event must have a description and /from and /to time!");
+            botPrint();
+        }
     }
 
-    public static void printTaskList() {
-        IntStream.range(0, taskList.size())
-                .forEach(i -> botAddLine((i + 1) + ". " + taskList.get(i)));
+    public static void listTasks() {
+        if (taskList.isEmpty()) {
+            botAddLine("Your list got nothing leh...");
+        } else {
+            IntStream.range(0, taskList.size())
+                    .forEach(i -> botAddLine((i + 1) + ". " + taskList.get(i)));
+        }
         botPrint();
     }
 
     public static void main(String[] args) {
         botAddLine("Hello! I'm " + botName);
-        botAddLine("What you want me do today?");
+        botAddLine("What you want me do today ah?");
         botPrint();
 
         Scanner scan = new Scanner(System.in);
@@ -137,26 +175,46 @@ public class Dash {
                 break;
             }
 
-            if (msg.equals("bye")) {
+            String alias = msg.split("\\s+")[0];
+            Command command = Command.fromString(alias);
+            if (command == Command.BYE) {
                 break;
-            } else if (msg.equals("list")) {
-                printTaskList();
-            } else if (msg.startsWith("mark")) {
-                markTask(msg);
-            } else if (msg.startsWith("unmark")) {
-                unmarkTask(msg);
-            } else if (msg.startsWith("delete")) {
-                deleteTask(msg);
-            } else if (msg.startsWith("todo")) {
-                addTodo(msg);
-            } else if (msg.startsWith("deadline")) {
-                addDeadline(msg);
-            } else if (msg.startsWith("event")) {
-                addEvent(msg);
-            } else {
-                printDefaultMessage();
             }
-        }
+
+            switch (command) {
+            case LIST:
+                listTasks();
+                break;
+
+            case MARK:
+                markTask(msg);
+                break;
+
+            case UNMARK:
+                unmarkTask(msg);
+                break;
+
+            case DELETE:
+                deleteTask(msg);
+                break;
+
+            case TODO:
+                addTodo(msg);
+                break;
+
+            case DEADLINE:
+                addDeadline(msg);
+                break;
+
+            case EVENT:
+                addEvent(msg);
+                break;
+
+            default:
+                printDefaultMessage();
+                break;
+            }
+            }
 
         botAddLine("Bye bye! See you ah!");
         botPrint();
