@@ -1,9 +1,13 @@
 public class Deadline extends Task {
-    private String by;
+    private final String by;
 
     public Deadline(String description, String by) {
         super(description);
         this.by = by;
+    }
+
+    public String stringify() {
+        return String.format("D | %d | %s | %s", super.isDone ? 1 : 0, super.description, this.by);
     }
 
     public String toString() {

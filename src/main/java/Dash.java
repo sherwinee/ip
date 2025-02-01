@@ -12,6 +12,13 @@ public class Dash {
     private static final ArrayList<String> botMsgList = new ArrayList<>();
     private static final List<String> bannedChars = List.of("|");
 
+    public static String getTaskListString() {
+        return taskList.stream()
+                .map(task -> task.stringify() + "\n")
+                .reduce("", (x, y) -> x + y)
+                .strip();
+    }
+
     private static boolean hasBannedChars(String msg) {
         return bannedChars.stream().anyMatch(msg::contains);
     }
