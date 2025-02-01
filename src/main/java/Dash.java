@@ -1,13 +1,20 @@
 import java.util.Scanner;
 import java.util.ArrayList;
+import java.util.List;
 import java.util.stream.IntStream;
 import java.util.NoSuchElementException;
 import java.lang.IllegalArgumentException;
+import java.util.stream.Stream;
 
 public class Dash {
     public static final String botName = "Dash";
-    private static ArrayList<Task> taskList = new ArrayList<>();
-    private static ArrayList<String> botMsgList = new ArrayList<>();
+    private static final ArrayList<Task> taskList = new ArrayList<>();
+    private static final ArrayList<String> botMsgList = new ArrayList<>();
+    private static final List<String> bannedChars = List.of("|");
+
+    private static boolean hasBannedChars(String msg) {
+        return bannedChars.stream().anyMatch(msg::contains);
+    }
 
     public static void botAddLine(String msg) {
         botMsgList.add(msg);
@@ -173,6 +180,12 @@ public class Dash {
                 msg = scan.nextLine();
             } catch (NoSuchElementException e) {
                 break;
+            }
+            if (hasBannedChars(msg)) {
+                botAddLine("The following characters are not allowed:");
+                botAddLine(bannedChars.stream().reduce("", (x, y) -> x + y));
+                botPrint();
+                continue;
             }
 
             String alias = msg.split("\\s+")[0];
