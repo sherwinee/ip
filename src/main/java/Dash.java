@@ -1,13 +1,103 @@
-import java.util.Scanner;
-import java.util.ArrayList;
+import java.io.File;
+import java.io.FileNotFoundException;
+import java.io.FileWriter;
+import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.Paths;
+import java.util.*;
 import java.util.stream.IntStream;
-import java.util.NoSuchElementException;
 import java.lang.IllegalArgumentException;
+import java.util.stream.Stream;
 
 public class Dash {
     public static final String botName = "Dash";
-    private static ArrayList<Task> taskList = new ArrayList<>();
-    private static ArrayList<String> botMsgList = new ArrayList<>();
+    private static final ArrayList<Task> taskList = new ArrayList<>();
+    private static final ArrayList<String> botMsgList = new ArrayList<>();
+    private static final List<String> BANNED_CHARS = List.of("|");
+    private static final String FILE_PATH = "./data/dash.txt";
+
+    public static String getTaskListString() {
+        return taskList.stream()
+                .map(task -> task.stringify() + "\n")
+                .reduce("", (x, y) -> x + y)
+                .strip();
+    }
+
+    private static Task getTaskFromString(String str) throws IllegalArgumentException {
+        String type = str.substring(0, 1);
+        String sep = " \\| ";
+        List<String> fields = Arrays.asList(str.split(sep));
+        fields.forEach(f -> {
+            if (f.isEmpty() || hasBannedChars(f)) {
+                throw new IllegalArgumentException();
+            }
+        });
+        switch (type) {
+        case "T":
+            if (fields.size() != 3) {
+                throw new IllegalArgumentException();
+            }
+            return new Todo(fields.get(2), fields.get(1).equals("1"));
+
+        case "D":
+            if (fields.size() != 4) {
+                throw new IllegalArgumentException();
+            }
+            return new Deadline(fields.get(2), fields.get(1).equals("1"), fields.get(3));
+
+        case "E":
+            if (fields.size() != 5) {
+                throw new IllegalArgumentException();
+            }
+
+            return new Event(fields.get(2), fields.get(1).equals("1"), fields.get(3), fields.get(4));
+
+        }
+
+        throw new IllegalArgumentException();
+    }
+
+    public static void loadTasks() throws IllegalArgumentException {
+        try {
+            File taskFile = new File(FILE_PATH);
+            Scanner scan = new Scanner(taskFile);
+            Stream.generate(() -> scan.hasNextLine() ? scan.nextLine() : "")
+                    .takeWhile(s -> !s.isEmpty())
+                    .map(Dash::getTaskFromString)
+                    .forEachOrdered(taskList::add);
+            botAddLine("Tasks loaded from file " + FILE_PATH);
+            botPrint();
+        } catch (FileNotFoundException e) {
+            botAddLine("No tasks file detected. Starting new session.");
+            botPrint();
+        } catch (IllegalArgumentException e) {
+            botAddLine("The tasks file at " + FILE_PATH + " is corrupted. Starting new session.");
+            botPrint();
+        }
+    }
+
+    public static void saveTasks() {
+        try {
+            // Create the directory if it doesn't exist
+            Files.createDirectories(Paths.get(FILE_PATH).getParent());
+
+            FileWriter fw = new FileWriter(FILE_PATH, false);
+            fw.write(getTaskListString());
+            fw.close();
+            botAddLine("Tasks saved to " + FILE_PATH);
+            botPrint();
+        } catch (IOException e) {
+            botAddLine("Cannot write to file at " + FILE_PATH);
+            botAddLine("");
+            botAddLine("Details:");
+            botAddLine(e.toString());
+            botPrint();
+        }
+    }
+
+    private static boolean hasBannedChars(String msg) {
+        return BANNED_CHARS.stream().anyMatch(msg::contains);
+    }
 
     public static void botAddLine(String msg) {
         botMsgList.add(msg);
@@ -19,7 +109,7 @@ public class Dash {
         System.out.println(line);
         botMsgList.stream()
                 .map(msg -> indent + msg)
-                .forEach(newMsg -> System.out.println(newMsg));
+                .forEach(System.out::println);
         System.out.println(line);
         botMsgList.clear();
     }
@@ -84,6 +174,12 @@ public class Dash {
         }
     }
 
+    public static void deleteAllTasks() {
+        taskList.clear();
+        botAddLine("Ok! I delete all your tasks already.");
+        botPrint();
+    }
+
     public static void addTodo(String msg) {
         try {
             if (msg.length() < 6) {
@@ -93,7 +189,7 @@ public class Dash {
             if (desc.isEmpty()) {
                 throw new IllegalArgumentException();
             }
-            Task task = new Todo(msg);
+            Task task = new Todo(desc);
             taskList.add(task);
             botAddLine("Ok! I add this task already:");
             botAddLine("  " + task.toString());
@@ -161,6 +257,7 @@ public class Dash {
     }
 
     public static void main(String[] args) {
+        loadTasks();
         botAddLine("Hello! I'm " + botName);
         botAddLine("What you want me do today ah?");
         botPrint();
@@ -173,6 +270,12 @@ public class Dash {
                 msg = scan.nextLine();
             } catch (NoSuchElementException e) {
                 break;
+            }
+            if (hasBannedChars(msg)) {
+                botAddLine("The following characters are not allowed:");
+                botAddLine(BANNED_CHARS.stream().reduce("", (x, y) -> x + y));
+                botPrint();
+                continue;
             }
 
             String alias = msg.split("\\s+")[0];
@@ -198,6 +301,10 @@ public class Dash {
                 deleteTask(msg);
                 break;
 
+            case DELETEALL:
+                deleteAllTasks();
+                break;
+
             case TODO:
                 addTodo(msg);
                 break;
@@ -218,5 +325,6 @@ public class Dash {
 
         botAddLine("Bye bye! See you ah!");
         botPrint();
+        saveTasks();
     }
 }
