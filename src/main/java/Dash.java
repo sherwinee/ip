@@ -158,6 +158,12 @@ public class Dash {
         }
     }
 
+    public static void deleteAllTasks() {
+        taskList.clear();
+        botAddLine("Ok! I delete all your tasks already.");
+        botPrint();
+    }
+
     public static void addTodo(String msg) {
         try {
             if (msg.length() < 6) {
@@ -277,6 +283,10 @@ public class Dash {
 
             case DELETE:
                 deleteTask(msg);
+                break;
+
+            case DELETEALL:
+                deleteAllTasks();
                 break;
 
             case TODO:
