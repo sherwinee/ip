@@ -4,11 +4,8 @@ import java.io.FileWriter;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Paths;
-import java.util.Scanner;
-import java.util.ArrayList;
-import java.util.List;
+import java.util.*;
 import java.util.stream.IntStream;
-import java.util.NoSuchElementException;
 import java.lang.IllegalArgumentException;
 import java.util.stream.Stream;
 
@@ -29,22 +26,38 @@ public class Dash {
     private static Task getTaskFromString(String str) throws IllegalArgumentException {
         String type = str.substring(0, 1);
         String sep = " \\| ";
-        String[] fields = str.split(sep);
+        List<String> fields = Arrays.asList(str.split(sep));
+        fields.forEach(f -> {
+            if (f.isEmpty() || hasBannedChars(f)) {
+                throw new IllegalArgumentException();
+            }
+        });
         switch (type) {
         case "T":
-            return new Todo(fields[2], fields[1].equals("1"));
+            if (fields.size() != 3) {
+                throw new IllegalArgumentException();
+            }
+            return new Todo(fields.get(2), fields.get(1).equals("1"));
 
         case "D":
-            return new Deadline(fields[2], fields[1].equals("1"), fields[3]);
+            if (fields.size() != 4) {
+                throw new IllegalArgumentException();
+            }
+            return new Deadline(fields.get(2), fields.get(1).equals("1"), fields.get(3));
 
         case "E":
-            return new Event(fields[2], fields[1].equals("1"), fields[3], fields[4]);
+            if (fields.size() != 5) {
+                throw new IllegalArgumentException();
+            }
+
+            return new Event(fields.get(2), fields.get(1).equals("1"), fields.get(3), fields.get(4));
+
         }
 
         throw new IllegalArgumentException();
     }
 
-    public static void loadTasks() {
+    public static void loadTasks() throws IllegalArgumentException {
         try {
             File taskFile = new File(FILE_PATH);
             Scanner scan = new Scanner(taskFile);
@@ -56,6 +69,9 @@ public class Dash {
             botPrint();
         } catch (FileNotFoundException e) {
             botAddLine("No tasks file detected. Starting new session.");
+            botPrint();
+        } catch (IllegalArgumentException e) {
+            botAddLine("The tasks file at " + FILE_PATH + " is corrupted. Starting new session.");
             botPrint();
         }
     }
