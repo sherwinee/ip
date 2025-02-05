@@ -1,16 +1,22 @@
-public class MarkCommand implements Command {
+package dash.command;
+
+import dash.task.Task;
+import dash.task.TaskList;
+import dash.Ui;
+
+public class UnmarkCommand implements Command {
     private final String msg;
 
-    MarkCommand(String msg) {
+    public UnmarkCommand(String msg) {
         this.msg = msg;
     }
 
     public void execute(TaskList taskList, Ui ui) {
         try {
-            int taskNumber = Integer.parseInt(msg.substring(5));
+            int taskNumber = Integer.parseInt(msg.substring(7));
             Task task = taskList.get(taskNumber - 1);
-            task.markDone();
-            ui.addLine("Ok! I mark this task as done liao!");
+            task.markUndone();
+            ui.addLine("Ok! I mark this task as not done yet already!");
             ui.addLine("  " + task);
             ui.print();
         } catch (NumberFormatException e) {

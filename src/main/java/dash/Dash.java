@@ -1,3 +1,10 @@
+package dash;
+
+import dash.command.Command;
+import dash.exception.ExitException;
+import dash.exception.UnknownCommandException;
+import dash.task.TaskList;
+
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.time.format.DateTimeParseException;
@@ -5,7 +12,7 @@ import java.util.*;
 import java.lang.IllegalArgumentException;
 
 public class Dash {
-    public static final String botName = "Dash";
+    public static final String botName = "dash.Dash";
 
     private static final String filePath = "./data/dash.txt";
     private final Ui ui;
@@ -66,7 +73,7 @@ public class Dash {
                 break;
             }
 
-            // Command Execution
+            // dash.command.Command Execution
             try {
                 command.execute(taskList, ui);
             } catch (Exception e) {
@@ -93,6 +100,6 @@ public class Dash {
     }
 
     public static void main(String[] args) {
-        new Dash("./data/Dash.txt").run();
+        new Dash("./data/dash.Dash.txt").run();
     }
 }

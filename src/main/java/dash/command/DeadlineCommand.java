@@ -1,10 +1,17 @@
+package dash.command;
+
+import dash.*;
+import dash.task.Deadline;
+import dash.task.Task;
+import dash.task.TaskList;
+
 import java.time.LocalDate;
 import java.time.format.DateTimeParseException;
 
 public class DeadlineCommand implements Command {
     private final String msg;
 
-    DeadlineCommand(String msg) {
+    public DeadlineCommand(String msg) {
         this.msg = msg;
     }
 

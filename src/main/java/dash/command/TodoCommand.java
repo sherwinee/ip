@@ -1,7 +1,14 @@
+package dash.command;
+
+import dash.task.Task;
+import dash.task.TaskList;
+import dash.task.Todo;
+import dash.Ui;
+
 public class TodoCommand implements Command {
     private final String msg;
 
-    TodoCommand(String msg) {
+    public TodoCommand(String msg) {
         this.msg = msg;
     }
 

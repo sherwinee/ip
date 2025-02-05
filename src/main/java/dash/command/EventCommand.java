@@ -1,10 +1,17 @@
+package dash.command;
+
+import dash.*;
+import dash.task.Event;
+import dash.task.Task;
+import dash.task.TaskList;
+
 import java.time.LocalDate;
 import java.time.format.DateTimeParseException;
 
 public class EventCommand implements Command {
     private final String msg;
 
-    EventCommand(String msg) {
+    public EventCommand(String msg) {
         this.msg = msg;
     }
 
