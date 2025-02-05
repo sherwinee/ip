@@ -1,25 +1,41 @@
 import java.util.ArrayList;
+import java.util.NoSuchElementException;
+import java.util.Scanner;
 
 public class Ui {
 
-    private static final ArrayList<String> botMsgList = new ArrayList<>();
+    private final ArrayList<String> botMsgList = new ArrayList<>();
+    private final Scanner scan;
 
-    public static void addLine(String msg) {
+    Ui() {
+        this.scan = new Scanner(System.in);
+    }
+
+    public String getNextMsg() throws NoSuchElementException {
+        return scan.nextLine();
+    }
+
+    public void addLine(String msg) {
         botMsgList.add(msg);
     }
 
-    public static void print() {
+    public void print() {
         String line = "    ____________________________________________________________";
         String indent = "     ";
         System.out.println(line);
         botMsgList.stream()
                 .map(msg -> indent + msg)
                 .forEach(System.out::println);
-        System.out.println(line);
+        System.out.println(line + "\n");
         botMsgList.clear();
     }
 
-    public static void clear() {
+    public void clear() {
         botMsgList.clear();
+    }
+
+    public void printDefaultMessage() {
+        this.addLine("Alamak! I dont know what that means :/");
+        this.print();
     }
 }

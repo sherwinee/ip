@@ -14,9 +14,9 @@ import java.util.stream.Stream;
 public class Storage {
 
     private String filePath;
-    private ArrayList<Task> taskList = new ArrayList<>();
+    private TaskList taskList;
 
-    Storage(String filePath, ArrayList<Task> taskList) {
+    Storage(String filePath, TaskList taskList) {
         this.taskList = taskList;
         this.filePath = filePath;
     }
@@ -62,44 +62,21 @@ public class Storage {
         throw new IllegalArgumentException();
     }
 
-    public void loadTasks() throws IllegalArgumentException {
-        try {
-            File taskFile = new File(filePath);
-            Scanner scan = new Scanner(taskFile);
-            Stream.generate(() -> scan.hasNextLine() ? scan.nextLine() : "")
-                    .takeWhile(s -> !s.isEmpty())
-                    .map(Storage::getTaskFromString)
-                    .forEachOrdered(taskList::add);
-            Ui.addLine("Tasks loaded from file " + filePath);
-            Ui.print();
-        } catch (FileNotFoundException e) {
-            Ui.addLine("No tasks file detected. Starting new session.");
-            Ui.print();
-        } catch (IllegalArgumentException e) {
-            Ui.addLine("The tasks file at " + filePath + " is corrupted. Starting new session.");
-            Ui.print();
-        } catch (DateTimeParseException e) {
-            Ui.addLine("The tasks file at " + filePath + " contains invalid date formats. Starting new session.");
-            Ui.print();
-        }
+    public void loadTasks() throws FileNotFoundException, IllegalArgumentException, DateTimeParseException {
+        File taskFile = new File(filePath);
+        Scanner scan = new Scanner(taskFile);
+        Stream.generate(() -> scan.hasNextLine() ? scan.nextLine() : "")
+                .takeWhile(s -> !s.isEmpty())
+                .map(Storage::getTaskFromString)
+                .forEachOrdered(taskList::add);
     }
 
-    public void saveTasks() {
-        try {
-            // Create the directory if it doesn't exist
-            Files.createDirectories(Paths.get(filePath).getParent());
+    public void saveTasks() throws IOException {
+        // Create the directory if it doesn't exist
+        Files.createDirectories(Paths.get(filePath).getParent());
 
-            FileWriter fw = new FileWriter(filePath, false);
-            fw.write(getTaskListString());
-            fw.close();
-            Ui.addLine("Tasks saved to " + filePath);
-            Ui.print();
-        } catch (IOException e) {
-            Ui.addLine("Cannot write to file at " + filePath);
-            Ui.addLine("");
-            Ui.addLine("Details:");
-            Ui.addLine(e.toString());
-            Ui.print();
-        }
+        FileWriter fw = new FileWriter(filePath, false);
+        fw.write(getTaskListString());
+        fw.close();
     }
 }

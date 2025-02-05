@@ -1,12 +1,33 @@
 todo read book
-deadline submit assignment /by Friday 4pm
-event lecture /from Friday 4pm /to 6pm
+deadline submit assignment /by 2025-02-10
+event lecture /from 2025-02-12 /to 2025-02-14
 list
 mark 1
 mark 2
 mark 3
 list
-mark 1
-mark 2
-mark 3
+unmark 1
+unmark 2
+unmark 3
+list
+todo
+deadline
+deadline Submit report
+deadline Submit report /by
+deadline Submit report /by sandaf
+deadline Submit report /by 2025-05-01
+event
+event Career Fair
+event Career Fair /from
+event Career Fair /from 2025-02-25
+event Career Fair /from 2025-02-25 /to
+event Career Fair /from asdads /to 2025-02-26
+event Career Fair /from 2025-02-25 /to asdasadw
+event Career Fair /from 2025-02-25 /to 2025-02-26
+list
+unknowncommand
+delete 2
+list
+deleteall
+list
 bye
