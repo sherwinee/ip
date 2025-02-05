@@ -1,3 +1,9 @@
+package dash;
+
+import dash.command.*;
+import dash.exception.ExitException;
+import dash.exception.UnknownCommandException;
+
 public class Parser {
 
     public Command parse(String msg) {

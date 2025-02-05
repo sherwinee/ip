@@ -1,3 +1,8 @@
+package dash.command;
+
+import dash.task.TaskList;
+import dash.Ui;
+
 import java.util.stream.IntStream;
 
 public class ListCommand implements Command {

@@ -1,7 +1,13 @@
+package dash.command;
+
+import dash.task.Task;
+import dash.task.TaskList;
+import dash.Ui;
+
 public class DeleteCommand implements Command {
     private final String msg;
 
-    DeleteCommand(String msg) {
+    public DeleteCommand(String msg) {
         this.msg = msg;
     }
 
