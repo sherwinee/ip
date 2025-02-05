@@ -4,6 +4,8 @@ import java.io.FileWriter;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Paths;
+import java.time.LocalDate;
+import java.time.format.DateTimeParseException;
 import java.util.*;
 import java.util.stream.IntStream;
 import java.lang.IllegalArgumentException;
@@ -23,7 +25,7 @@ public class Dash {
                 .strip();
     }
 
-    private static Task getTaskFromString(String str) throws IllegalArgumentException {
+    private static Task getTaskFromString(String str) throws IllegalArgumentException, DateTimeParseException {
         String type = str.substring(0, 1);
         String sep = " \\| ";
         List<String> fields = Arrays.asList(str.split(sep));
@@ -43,14 +45,14 @@ public class Dash {
             if (fields.size() != 4) {
                 throw new IllegalArgumentException();
             }
-            return new Deadline(fields.get(2), fields.get(1).equals("1"), fields.get(3));
+            return new Deadline(fields.get(2), fields.get(1).equals("1"), parseDate(fields.get(3)));
 
         case "E":
             if (fields.size() != 5) {
                 throw new IllegalArgumentException();
             }
 
-            return new Event(fields.get(2), fields.get(1).equals("1"), fields.get(3), fields.get(4));
+            return new Event(fields.get(2), fields.get(1).equals("1"), parseDate(fields.get(3)), parseDate(fields.get(4)));
 
         }
 
@@ -72,6 +74,9 @@ public class Dash {
             botPrint();
         } catch (IllegalArgumentException e) {
             botAddLine("The tasks file at " + FILE_PATH + " is corrupted. Starting new session.");
+            botPrint();
+        } catch (DateTimeParseException e) {
+            botAddLine("The tasks file at " + FILE_PATH + " contains invalid date formats. Starting new session.");
             botPrint();
         }
     }
@@ -112,6 +117,11 @@ public class Dash {
                 .forEach(System.out::println);
         System.out.println(line);
         botMsgList.clear();
+    }
+
+    public static LocalDate parseDate(String dateString) throws DateTimeParseException {
+        // Will contain more logic in the future
+        return LocalDate.parse(dateString);
     }
 
     public static void printDefaultMessage() {
@@ -207,11 +217,19 @@ public class Dash {
                 throw new IllegalArgumentException();
             }
             String desc = msg.substring(9, msg.indexOf("/by ")).strip();
-            String by = msg.substring(msg.indexOf("/by ") + 4).strip();
-            if (desc.isEmpty() || by.isEmpty()) {
+            String byString = msg.substring(msg.indexOf("/by ") + 4).strip();
+            if (desc.isEmpty() || byString.isEmpty()) {
                 throw new IllegalArgumentException();
             }
-            Task task = new Deadline(desc, by);
+            LocalDate byDate;
+            try {
+                byDate = parseDate(byString);
+            } catch (DateTimeParseException e) {
+                botAddLine("Give me the date in yyyy-mm-dd format.");
+                botPrint();
+                return;
+            }
+            Task task = new Deadline(desc, byDate);
             taskList.add(task);
             botAddLine("Ok! I add this task already:");
             botAddLine("  " + task.toString());
@@ -229,12 +247,22 @@ public class Dash {
                 throw new IllegalArgumentException();
             }
             String desc = msg.substring(6, msg.indexOf("/from ")).strip();
-            String from = msg.substring(msg.indexOf("/from ") + 6, msg.indexOf("/to ")).strip();
-            String to = msg.substring(msg.indexOf("/to ") + 4).strip();
-            if (desc.isEmpty() || from.isEmpty() || to.isEmpty()) {
+            String fromString = msg.substring(msg.indexOf("/from ") + 6, msg.indexOf("/to ")).strip();
+            String toString = msg.substring(msg.indexOf("/to ") + 4).strip();
+            if (desc.isEmpty() || fromString.isEmpty() || toString.isEmpty()) {
                 throw new IllegalArgumentException();
             }
-            Task task = new Event(desc, from, to);
+            LocalDate fromDate;
+            LocalDate toDate;
+            try {
+                fromDate = parseDate(fromString);
+                toDate = parseDate(toString);
+            } catch (DateTimeParseException e) {
+                botAddLine("Give me the dates in yyyy-mm-dd format.");
+                botPrint();
+                return;
+            }
+            Task task = new Event(desc, fromDate, toDate);
             taskList.add(task);
             botAddLine("Ok! I add this task already:");
             botAddLine("  " + task.toString());
