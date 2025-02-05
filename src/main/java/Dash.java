@@ -14,7 +14,6 @@ import java.util.stream.Stream;
 public class Dash {
     public static final String botName = "Dash";
     private static final ArrayList<Task> taskList = new ArrayList<>();
-    private static final ArrayList<String> botMsgList = new ArrayList<>();
     private static final List<String> BANNED_CHARS = List.of("|");
     private static final String FILE_PATH = "./data/dash.txt";
 
@@ -67,17 +66,17 @@ public class Dash {
                     .takeWhile(s -> !s.isEmpty())
                     .map(Dash::getTaskFromString)
                     .forEachOrdered(taskList::add);
-            botAddLine("Tasks loaded from file " + FILE_PATH);
-            botPrint();
+            Ui.addLine("Tasks loaded from file " + FILE_PATH);
+            Ui.print();
         } catch (FileNotFoundException e) {
-            botAddLine("No tasks file detected. Starting new session.");
-            botPrint();
+            Ui.addLine("No tasks file detected. Starting new session.");
+            Ui.print();
         } catch (IllegalArgumentException e) {
-            botAddLine("The tasks file at " + FILE_PATH + " is corrupted. Starting new session.");
-            botPrint();
+            Ui.addLine("The tasks file at " + FILE_PATH + " is corrupted. Starting new session.");
+            Ui.print();
         } catch (DateTimeParseException e) {
-            botAddLine("The tasks file at " + FILE_PATH + " contains invalid date formats. Starting new session.");
-            botPrint();
+            Ui.addLine("The tasks file at " + FILE_PATH + " contains invalid date formats. Starting new session.");
+            Ui.print();
         }
     }
 
@@ -89,34 +88,19 @@ public class Dash {
             FileWriter fw = new FileWriter(FILE_PATH, false);
             fw.write(getTaskListString());
             fw.close();
-            botAddLine("Tasks saved to " + FILE_PATH);
-            botPrint();
+            Ui.addLine("Tasks saved to " + FILE_PATH);
+            Ui.print();
         } catch (IOException e) {
-            botAddLine("Cannot write to file at " + FILE_PATH);
-            botAddLine("");
-            botAddLine("Details:");
-            botAddLine(e.toString());
-            botPrint();
+            Ui.addLine("Cannot write to file at " + FILE_PATH);
+            Ui.addLine("");
+            Ui.addLine("Details:");
+            Ui.addLine(e.toString());
+            Ui.print();
         }
     }
 
     private static boolean hasBannedChars(String msg) {
         return BANNED_CHARS.stream().anyMatch(msg::contains);
-    }
-
-    public static void botAddLine(String msg) {
-        botMsgList.add(msg);
-    }
-
-    public static void botPrint() {
-        String line = "    ____________________________________________________________";
-        String indent = "     ";
-        System.out.println(line);
-        botMsgList.stream()
-                .map(msg -> indent + msg)
-                .forEach(System.out::println);
-        System.out.println(line);
-        botMsgList.clear();
     }
 
     public static LocalDate parseDate(String dateString) throws DateTimeParseException {
@@ -125,8 +109,8 @@ public class Dash {
     }
 
     public static void printDefaultMessage() {
-        botAddLine("Alamak! I dont know what that means :/");
-        botPrint();
+        Ui.addLine("Alamak! I dont know what that means :/");
+        Ui.print();
     }
 
     public static void markTask(String msg) {
@@ -134,15 +118,15 @@ public class Dash {
             int taskNumber = Integer.parseInt(msg.substring(5));
             Task task = taskList.get(taskNumber - 1);
             task.markDone();
-            botAddLine("Ok! I mark this task as done liao!");
-            botAddLine("  " + task);
-            botPrint();
+            Ui.addLine("Ok! I mark this task as done liao!");
+            Ui.addLine("  " + task);
+            Ui.print();
         } catch (NumberFormatException e) {
-            botAddLine("Invalid number format!");
-            botPrint();
+            Ui.addLine("Invalid number format!");
+            Ui.print();
         } catch (IndexOutOfBoundsException e) {
-            botAddLine("That task doesn't exist!");
-            botPrint();
+            Ui.addLine("That task doesn't exist!");
+            Ui.print();
         }
     }
 
@@ -151,15 +135,15 @@ public class Dash {
             int taskNumber = Integer.parseInt(msg.substring(7));
             Task task = taskList.get(taskNumber - 1);
             task.markUndone();
-            botAddLine("Ok! I mark this task as not done yet already!");
-            botAddLine("  " + task);
-            botPrint();
+            Ui.addLine("Ok! I mark this task as not done yet already!");
+            Ui.addLine("  " + task);
+            Ui.print();
         } catch (NumberFormatException e) {
-            botAddLine("Invalid number format!");
-            botPrint();
+            Ui.addLine("Invalid number format!");
+            Ui.print();
         } catch (IndexOutOfBoundsException e) {
-            botAddLine("That task doesn't exist!");
-            botPrint();
+            Ui.addLine("That task doesn't exist!");
+            Ui.print();
         }
     }
 
@@ -171,23 +155,23 @@ public class Dash {
             int taskNumber = Integer.parseInt(msg.substring(7));
             Task task = taskList.get(taskNumber - 1);
             taskList.remove(taskNumber - 1);
-            botAddLine("Ok! I delete this task already:");
-            botAddLine("  " + task.toString());
-            botAddLine("Now your list got " + taskList.size() + " tasks.");
-            botPrint();
+            Ui.addLine("Ok! I delete this task already:");
+            Ui.addLine("  " + task.toString());
+            Ui.addLine("Now your list got " + taskList.size() + " tasks.");
+            Ui.print();
         } catch (IllegalArgumentException e) {
-            botAddLine("Aiya! Your task name cannot be empty!");
-            botPrint();
+            Ui.addLine("Aiya! Your task name cannot be empty!");
+            Ui.print();
         } catch (IndexOutOfBoundsException e) {
-            botAddLine("That task doesn't exist!");
-            botPrint();
+            Ui.addLine("That task doesn't exist!");
+            Ui.print();
         }
     }
 
     public static void deleteAllTasks() {
         taskList.clear();
-        botAddLine("Ok! I delete all your tasks already.");
-        botPrint();
+        Ui.addLine("Ok! I delete all your tasks already.");
+        Ui.print();
     }
 
     public static void addTodo(String msg) {
@@ -201,13 +185,13 @@ public class Dash {
             }
             Task task = new Todo(desc);
             taskList.add(task);
-            botAddLine("Ok! I add this task already:");
-            botAddLine("  " + task.toString());
-            botAddLine("Now your list got " + taskList.size() + " tasks.");
-            botPrint();
+            Ui.addLine("Ok! I add this task already:");
+            Ui.addLine("  " + task.toString());
+            Ui.addLine("Now your list got " + taskList.size() + " tasks.");
+            Ui.print();
         } catch (IllegalArgumentException e) {
-            botAddLine("Your todo description cannot be empty!");
-            botPrint();
+            Ui.addLine("Your todo description cannot be empty!");
+            Ui.print();
         }
     }
 
@@ -225,19 +209,19 @@ public class Dash {
             try {
                 byDate = parseDate(byString);
             } catch (DateTimeParseException e) {
-                botAddLine("Give me the date in yyyy-mm-dd format.");
-                botPrint();
+                Ui.addLine("Give me the date in yyyy-mm-dd format.");
+                Ui.print();
                 return;
             }
             Task task = new Deadline(desc, byDate);
             taskList.add(task);
-            botAddLine("Ok! I add this task already:");
-            botAddLine("  " + task.toString());
-            botAddLine("Now your list got " + taskList.size() + " tasks.");
-            botPrint();
+            Ui.addLine("Ok! I add this task already:");
+            Ui.addLine("  " + task.toString());
+            Ui.addLine("Now your list got " + taskList.size() + " tasks.");
+            Ui.print();
         } catch (IllegalArgumentException e) {
-            botAddLine("Your deadline must have a description and /by time!");
-            botPrint();
+            Ui.addLine("Your deadline must have a description and /by time!");
+            Ui.print();
         }
     }
 
@@ -258,37 +242,37 @@ public class Dash {
                 fromDate = parseDate(fromString);
                 toDate = parseDate(toString);
             } catch (DateTimeParseException e) {
-                botAddLine("Give me the dates in yyyy-mm-dd format.");
-                botPrint();
+                Ui.addLine("Give me the dates in yyyy-mm-dd format.");
+                Ui.print();
                 return;
             }
             Task task = new Event(desc, fromDate, toDate);
             taskList.add(task);
-            botAddLine("Ok! I add this task already:");
-            botAddLine("  " + task.toString());
-            botAddLine("Now your list got " + taskList.size() + " tasks.");
-            botPrint();
+            Ui.addLine("Ok! I add this task already:");
+            Ui.addLine("  " + task.toString());
+            Ui.addLine("Now your list got " + taskList.size() + " tasks.");
+            Ui.print();
         } catch (IllegalArgumentException e) {
-            botAddLine("Your event must have a description and /from and /to time!");
-            botPrint();
+            Ui.addLine("Your event must have a description and /from and /to time!");
+            Ui.print();
         }
     }
 
     public static void listTasks() {
         if (taskList.isEmpty()) {
-            botAddLine("Your list got nothing leh...");
+            Ui.addLine("Your list got nothing leh...");
         } else {
             IntStream.range(0, taskList.size())
-                    .forEach(i -> botAddLine((i + 1) + ". " + taskList.get(i)));
+                    .forEach(i -> Ui.addLine((i + 1) + ". " + taskList.get(i)));
         }
-        botPrint();
+        Ui.print();
     }
 
     public static void main(String[] args) {
         loadTasks();
-        botAddLine("Hello! I'm " + botName);
-        botAddLine("What you want me do today ah?");
-        botPrint();
+        Ui.addLine("Hello! I'm " + botName);
+        Ui.addLine("What you want me do today ah?");
+        Ui.print();
 
         Scanner scan = new Scanner(System.in);
         while (true) {
@@ -300,9 +284,9 @@ public class Dash {
                 break;
             }
             if (hasBannedChars(msg)) {
-                botAddLine("The following characters are not allowed:");
-                botAddLine(BANNED_CHARS.stream().reduce("", (x, y) -> x + y));
-                botPrint();
+                Ui.addLine("The following characters are not allowed:");
+                Ui.addLine(BANNED_CHARS.stream().reduce("", (x, y) -> x + y));
+                Ui.print();
                 continue;
             }
 
@@ -351,8 +335,8 @@ public class Dash {
             }
             }
 
-        botAddLine("Bye bye! See you ah!");
-        botPrint();
+        Ui.addLine("Bye bye! See you ah!");
+        Ui.print();
         saveTasks();
     }
 }
