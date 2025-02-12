@@ -11,6 +11,7 @@ public enum CommandEnum {
     UNKNOWN(),
     BYE("bye"),
     LIST("list"),
+    SEARCH("search"),
     MARK("mark"),
     UNMARK("unmark"),
     DELETE("delete", "del"),
