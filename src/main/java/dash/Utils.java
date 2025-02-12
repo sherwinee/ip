@@ -22,7 +22,7 @@ public class Utils {
 
     /**
      * Parses the given string to a DateTime object.
-     * @param dateString
+     * @param dateString the string containing the date to be parsed.
      * @return the corresponding DateTime object.
      * @throws DateTimeParseException if the given string is invalid.
      */
