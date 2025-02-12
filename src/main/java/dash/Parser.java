@@ -1,6 +1,15 @@
 package dash;
 
-import dash.command.*;
+import dash.command.Command;
+import dash.command.CommandEnum;
+import dash.command.DeadlineCommand;
+import dash.command.DeleteAllCommand;
+import dash.command.DeleteCommand;
+import dash.command.EventCommand;
+import dash.command.ListCommand;
+import dash.command.MarkCommand;
+import dash.command.TodoCommand;
+import dash.command.UnmarkCommand;
 import dash.exception.ExitException;
 import dash.exception.UnknownCommandException;
 

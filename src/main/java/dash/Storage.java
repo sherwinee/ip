@@ -1,6 +1,10 @@
 package dash;
 
-import dash.task.*;
+import dash.task.Deadline;
+import dash.task.Event;
+import dash.task.Task;
+import dash.task.TaskList;
+import dash.task.Todo;
 
 import java.io.File;
 import java.io.FileNotFoundException;
