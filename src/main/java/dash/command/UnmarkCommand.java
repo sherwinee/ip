@@ -4,6 +4,9 @@ import dash.task.Task;
 import dash.task.TaskList;
 import dash.Ui;
 
+/**
+ * The command to mark a specific Task as not done.
+ */
 public class UnmarkCommand implements Command {
     private final String msg;
 

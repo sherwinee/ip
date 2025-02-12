@@ -4,6 +4,9 @@ import dash.task.Task;
 import dash.task.TaskList;
 import dash.Ui;
 
+/**
+ * The command to delete a specific task.
+ */
 public class DeleteCommand implements Command {
     private final String msg;
 

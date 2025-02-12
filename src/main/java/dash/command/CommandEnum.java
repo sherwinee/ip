@@ -4,6 +4,9 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.Set;
 
+/**
+ * An enumeration of valid commands containing strings that users enter to invoke the commands.
+ */
 public enum CommandEnum {
     UNKNOWN(),
     BYE("bye"),
@@ -31,6 +34,11 @@ public enum CommandEnum {
         this.aliases = Set.<String>of(aliases);
     }
 
+    /**
+     * Returns the CommandEnum corresponding to the input command string, or UNKOWN if the string is not recognised.
+     * @param alias The string entered by the user representing the command.
+     * @return The corresponding CommandEnum.
+     */
     public static CommandEnum fromString(String alias) {
         return commandMap.getOrDefault(alias, CommandEnum.UNKNOWN);
     }

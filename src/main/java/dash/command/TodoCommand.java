@@ -5,6 +5,9 @@ import dash.task.TaskList;
 import dash.task.Todo;
 import dash.Ui;
 
+/**
+ * The command to add a new Todo Task.
+ */
 public class TodoCommand implements Command {
     private final String msg;
 

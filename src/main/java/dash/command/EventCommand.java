@@ -8,6 +8,9 @@ import dash.task.TaskList;
 import java.time.LocalDate;
 import java.time.format.DateTimeParseException;
 
+/**
+ * The command to add a new Event Task.
+ */
 public class EventCommand implements Command {
     private final String msg;
 

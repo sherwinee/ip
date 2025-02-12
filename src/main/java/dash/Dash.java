@@ -11,6 +11,9 @@ import java.time.format.DateTimeParseException;
 import java.util.*;
 import java.lang.IllegalArgumentException;
 
+/**
+ * Represents the bot object.
+ */
 public class Dash {
     public static final String botName = "dash.Dash";
 
@@ -42,6 +45,10 @@ public class Dash {
         }
     }
 
+    /**
+     * Starts the bot instance and continues receiving input until
+     * the command to exit is entered.
+     */
     public void run() {
         ui.addLine("Hello! I'm " + botName);
         ui.addLine("What you want me do today ah?");

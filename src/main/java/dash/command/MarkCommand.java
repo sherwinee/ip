@@ -4,6 +4,9 @@ import dash.task.Task;
 import dash.task.TaskList;
 import dash.Ui;
 
+/**
+ * The command to mark a specific Task as done.
+ */
 public class MarkCommand implements Command {
     private final String msg;
 

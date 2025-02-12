@@ -4,6 +4,9 @@ import dash.exception.ExitException;
 import dash.task.TaskList;
 import dash.Ui;
 
+/**
+ * The exit command to end the bot.
+ */
 public class ByeCommand implements Command {
     private final String msg;
 

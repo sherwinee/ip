@@ -8,6 +8,9 @@ import dash.task.TaskList;
 import java.time.LocalDate;
 import java.time.format.DateTimeParseException;
 
+/**
+ * The command to add a new Deadline Task.
+ */
 public class DeadlineCommand implements Command {
     private final String msg;
 

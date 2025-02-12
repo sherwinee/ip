@@ -3,6 +3,9 @@ package dash.command;
 import dash.task.TaskList;
 import dash.Ui;
 
+/**
+ * The command to delete ALL tasks from the TaskList.
+ */
 public class DeleteAllCommand implements Command {
     private final String msg;
 

@@ -5,6 +5,9 @@ import dash.Ui;
 
 import java.util.stream.IntStream;
 
+/**
+ * The command to list all tasks in the TaskList.
+ */
 public class ListCommand implements Command {
     private final String msg;
 
