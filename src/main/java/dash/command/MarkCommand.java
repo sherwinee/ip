@@ -27,4 +27,8 @@ public class MarkCommand implements Command {
             ui.print();
         }
     }
+
+    public String toString() {
+        return msg;
+    }
 }

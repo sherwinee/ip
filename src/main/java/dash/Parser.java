@@ -19,7 +19,7 @@ public class Parser {
 
         switch (commandEnum) {
         case LIST:
-            return new ListCommand();
+            return new ListCommand(msg);
 
         case MARK:
             return new MarkCommand(msg);
@@ -31,7 +31,7 @@ public class Parser {
             return new DeleteCommand(msg);
 
         case DELETEALL:
-            return new DeleteAllCommand();
+            return new DeleteAllCommand(msg);
 
         case TODO:
             return new TodoCommand(msg);

@@ -11,9 +11,7 @@ import java.time.format.DateTimeParseException;
 public class EventCommand implements Command {
     private final String msg;
 
-    public EventCommand(String msg) {
-        this.msg = msg;
-    }
+    public EventCommand(String msg) { this.msg = msg; }
 
     public void execute(TaskList taskList, Ui ui) {
         try {
@@ -46,5 +44,9 @@ public class EventCommand implements Command {
             ui.addLine("Your event must have a description and /from and /to time!");
             ui.print();
         }
+    }
+
+    public String toString() {
+        return msg;
     }
 }

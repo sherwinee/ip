@@ -24,14 +24,14 @@ public class Storage {
         this.filePath = filePath;
     }
 
-    private String getTaskListString() {
+    public String getTaskListString() {
         return this.taskList.stream()
                 .map(task -> task.stringify() + "\n")
                 .reduce("", (x, y) -> x + y)
                 .strip();
     }
 
-    private static Task getTaskFromString(String str) throws IllegalArgumentException, DateTimeParseException {
+    public static Task getTaskFromString(String str) throws IllegalArgumentException, DateTimeParseException {
         String type = str.substring(0, 1);
         String sep = " \\| ";
         List<String> fields = Arrays.asList(str.split(sep));

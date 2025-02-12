@@ -32,4 +32,8 @@ public class TodoCommand implements Command {
             ui.print();
         }
     }
+
+    public String toString() {
+        return msg;
+    }
 }

@@ -100,6 +100,6 @@ public class Dash {
     }
 
     public static void main(String[] args) {
-        new Dash("./data/dash.Dash.txt").run();
+        new Dash("./data/Dash.txt").run();
     }
 }

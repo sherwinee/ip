@@ -44,4 +44,8 @@ public class DeadlineCommand implements Command {
             ui.print();
         }
     }
+
+    public String toString() {
+        return msg;
+    }
 }

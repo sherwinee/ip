@@ -31,4 +31,8 @@ public class DeleteCommand implements Command {
             ui.print();
         }
     }
+
+    public String toString() {
+        return msg;
+    }
 }
