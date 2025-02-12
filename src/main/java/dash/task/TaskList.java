@@ -1,6 +1,8 @@
 package dash.task;
 
 import java.util.ArrayList;
+import java.util.List;
+import java.util.stream.IntStream;
 import java.util.stream.Stream;
 
 public class TaskList {
@@ -32,5 +34,12 @@ public class TaskList {
 
     public Stream<Task> stream() {
         return this.taskList.stream();
+    }
+
+    public List<Integer> getIndicesOfTasksFromSearch(String searchStr) {
+        return IntStream.range(0, taskList.size())
+                .filter(i -> taskList.get(i).contains(searchStr))
+                .boxed()
+                .toList();
     }
 }

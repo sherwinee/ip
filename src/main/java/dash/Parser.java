@@ -8,6 +8,7 @@ import dash.command.DeleteCommand;
 import dash.command.EventCommand;
 import dash.command.ListCommand;
 import dash.command.MarkCommand;
+import dash.command.SearchCommand;
 import dash.command.TodoCommand;
 import dash.command.UnmarkCommand;
 import dash.exception.ExitException;
@@ -39,6 +40,9 @@ public class Parser {
         switch (commandEnum) {
         case LIST:
             return new ListCommand(msg);
+
+        case SEARCH:
+            return new SearchCommand(msg);
 
         case MARK:
             return new MarkCommand(msg);
