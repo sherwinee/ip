@@ -41,7 +41,7 @@ public class Storage {
      * for saving to the saved tasks file. Returns an empty string if the taskList is empty
      * @return The formatted string of tasks
      */
-    public String getTaskListString() {
+    public String getFormattedTasksString() {
         return this.taskList.stream()
                 .map(task -> task.stringify() + "\n")
                 .reduce("", (x, y) -> x + y)
@@ -56,7 +56,7 @@ public class Storage {
      * @throws IllegalArgumentException If the format is corrupted or contains banned characters
      * @throws DateTimeParseException If the date string fails to be parsed due to invalid format
      */
-    public static Task getTaskFromString(String str) throws IllegalArgumentException, DateTimeParseException {
+    public static Task parseTaskFromString(String str) throws IllegalArgumentException, DateTimeParseException {
         String type = str.substring(0, 1);
         String sep = " \\| ";
         List<String> fields = Arrays.asList(str.split(sep));
@@ -102,7 +102,7 @@ public class Storage {
         Scanner scan = new Scanner(taskFile);
         Stream.generate(() -> scan.hasNextLine() ? scan.nextLine() : "")
                 .takeWhile(s -> !s.isEmpty())
-                .map(Storage::getTaskFromString)
+                .map(Storage::parseTaskFromString)
                 .forEachOrdered(taskList::add);
     }
 
@@ -116,7 +116,7 @@ public class Storage {
         Files.createDirectories(Paths.get(filePath).getParent());
 
         FileWriter fw = new FileWriter(filePath, false);
-        fw.write(getTaskListString());
+        fw.write(getFormattedTasksString());
         fw.close();
     }
 }
