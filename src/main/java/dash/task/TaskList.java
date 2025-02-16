@@ -5,17 +5,32 @@ import java.util.List;
 import java.util.stream.IntStream;
 import java.util.stream.Stream;
 
+/**
+ * A wrapper around an ArrayList storing Task objects.
+ * Will have more method next time.
+ */
 public class TaskList {
     private final ArrayList<Task> taskList = new ArrayList<>();
 
+    /**
+     * Adds a task to the TaskList
+     * @param task task to be added
+     */
     public void add(Task task) {
         this.taskList.add(task);
     }
 
+    /**
+     * Removes the task at the given index from the TaskList
+     * @param index index of task to be deleted
+     */
     public void remove(int index) {
         this.taskList.remove(index);
     }
 
+    /**
+     * Empties TaskList
+     */
     public void clear() {
         this.taskList.clear();
     }
