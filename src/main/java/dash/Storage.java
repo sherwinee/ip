@@ -82,11 +82,8 @@ public class Storage {
             if (fields.size() != 5) {
                 throw new IllegalArgumentException();
             }
-
             return new Event(fields.get(2), fields.get(1).equals("1"), Utils.parseDate(fields.get(3)), Utils.parseDate(fields.get(4)));
-
         }
-
         throw new IllegalArgumentException();
     }
 
