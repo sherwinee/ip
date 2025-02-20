@@ -20,15 +20,6 @@ public class Ui {
     }
 
     /**
-     * Returns the next input from stdin.
-     * @return the next input from stdin
-     * @throws NoSuchElementException if the stdin is empty.
-     */
-    public String getNextMsg() throws NoSuchElementException {
-        return scan.nextLine();
-    }
-
-    /**
      * Adds a line to the output buffer of this Ui class in preparation of printing.
      * @param msg The line to be added
      */
@@ -40,14 +31,19 @@ public class Ui {
      * Formats and prints the lines currently in the output buffer, then flushes the output buffer.
      */
     public void print() {
-        String line = "    ____________________________________________________________";
-        String indent = "     ";
-        System.out.println(line);
-        botMsgList.stream()
-                .map(msg -> indent + msg)
-                .forEach(System.out::println);
-        System.out.println(line + "\n");
-        botMsgList.clear();
+        return;
+    }
+
+    /**
+     * Flushes the buffer and returns the lines added for output
+     * @return the output
+     */
+    public String getResponse() {
+        String response = botMsgList.stream()
+                .reduce("", (x, y) -> x + y + "\n")
+                .strip();
+        this.clear();
+        return response;
     }
 
     /**
@@ -60,8 +56,18 @@ public class Ui {
     /**
      * Prints the unknown command message.
      */
-    public void printDefaultMessage() {
+    public void setDefaultMessage() {
+        this.clear();
         this.addLine("Alamak! I dont know what that means :/");
-        this.print();
+    }
+
+    public void setExitMessage() {
+        this.clear();
+        this.addLine("Bye bye! See you again soon ah!");
+    }
+
+    public void appendSaveFailureMessage() {
+        this.addLine("");
+        this.addLine("(Warning: Failed to save to file)");
     }
 }

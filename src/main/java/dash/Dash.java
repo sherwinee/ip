@@ -4,6 +4,9 @@ import dash.command.Command;
 import dash.exception.ExitException;
 import dash.exception.UnknownCommandException;
 import dash.task.TaskList;
+import javafx.animation.PauseTransition;
+import javafx.application.Platform;
+import javafx.util.Duration;
 
 import java.io.FileNotFoundException;
 import java.io.IOException;
@@ -18,16 +21,17 @@ import java.util.NoSuchElementException;
 public class Dash {
     public static final String botName = "dash.Dash";
 
-    private static final String filePath = "./data/dash.txt";
+    private final String filePath;
     private final Ui ui;
     private final Storage storage;
     private final TaskList taskList;
     private final Parser parser;
 
     Dash(String filePath) {
+        this.filePath = filePath;
         this.ui = new Ui();
         this.taskList = new TaskList();
-        this.storage = new Storage(Dash.filePath, taskList);
+        this.storage = new Storage(this.filePath, taskList);
         this.parser = new Parser();
 
         try {
@@ -50,64 +54,28 @@ public class Dash {
      * Starts the bot instance and continues receiving input until
      * the command to exit is entered.
      */
-    public void run() {
-        ui.addLine("Hello! I'm " + botName);
-        ui.addLine("What you want me do today ah?");
-        ui.print();
-
-
-        while (true) {
-            String msg;
-            try {
-                msg = ui.getNextMsg();
-            } catch (NoSuchElementException e) {
-                break;
-            }
-
-            // Parsing
-            Command command;
-            try {
-                command = parser.parse(msg);
-            } catch (IllegalArgumentException e) {
-                ui.addLine("The following characters are not allowed:");
-                ui.addLine(Utils.BANNED_CHARS.stream()
-                        .reduce("", (x, y) -> x + y));
-                ui.print();
-                continue;
-            } catch (UnknownCommandException e) {
-                ui.printDefaultMessage();
-                continue;
-            } catch (ExitException e) {
-                break;
-            }
-
-            // dash.command.Command Execution
-            try {
-                command.execute(taskList, ui);
-            } catch (Exception e) {
-                ui.addLine("An unknown error occurred.");
-                ui.addLine("Details:");
-                ui.addLine(e.toString());
-                ui.print();
-            }
-        }
-
-        ui.addLine("Bye bye! See you ah!");
-        ui.print();
+    public String getResponse(String msg) {
+        // Parsing
+        Command command;
         try {
+            command = parser.parse(msg);
+            command.execute(taskList, ui);
             storage.saveTasks();
-            ui.addLine("Tasks saved to " + filePath);
-            ui.print();
+        } catch (IllegalArgumentException e) {
+            ui.addLine("The following characters are not allowed:");
+            ui.addLine(Utils.BANNED_CHARS.stream()
+                    .reduce("", (x, y) -> x + y));
+        } catch (UnknownCommandException e) {
+            ui.setDefaultMessage();
+        } catch (ExitException e) {
+            ui.setExitMessage();
+            // Ends the programme in 2 seconds without blocking
+            PauseTransition delay = new PauseTransition(Duration.seconds(2)); // 2-seconds delay
+            delay.setOnFinished(event -> Platform.exit()); // Exit JavaFX after delay
+            delay.play();
         } catch (IOException e) {
-            ui.addLine("Cannot write to file at " + filePath);
-            ui.addLine("");
-            ui.addLine("Details:");
-            ui.addLine(e.toString());
-            ui.print();
+            ui.appendSaveFailureMessage();
         }
-    }
-
-    public static void main(String[] args) {
-        new Dash("./data/Dash.txt").run();
+        return ui.getResponse();
     }
 }
