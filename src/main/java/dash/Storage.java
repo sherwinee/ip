@@ -34,6 +34,7 @@ public class Storage {
     Storage(String filePath, TaskList taskList) {
         this.taskList = taskList;
         this.filePath = filePath;
+        assert !filePath.isEmpty();
     }
 
     /**

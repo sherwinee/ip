@@ -42,6 +42,7 @@ public class Ui {
      * @return the output
      */
     public String getResponse() {
+        assert !botMsgList.isEmpty();
         String response = botMsgList.stream()
                 .reduce("", (x, y) -> x + y + "\n")
                 .strip();
