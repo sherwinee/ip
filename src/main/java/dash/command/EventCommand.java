@@ -12,6 +12,8 @@ import java.time.format.DateTimeParseException;
  * The command to add a new Event Task.
  */
 public class EventCommand implements Command {
+    public static final String INVALID_DATE_FORMAT_MSG = "Give me the dates in yyyy-mm-dd format.";
+    public static final String INVALID_ARGS_MSG = "Your event must have a description and /from and /to time!";
     private final String msg;
 
     public EventCommand(String msg) { this.msg = msg; }
@@ -21,9 +23,9 @@ public class EventCommand implements Command {
             if (msg.length() < 6 || !msg.contains("/from ") || !msg.contains("/to ")) {
                 throw new IllegalArgumentException();
             }
-            String desc = msg.substring(6, msg.indexOf("/from ")).strip();
-            String fromString = msg.substring(msg.indexOf("/from ") + 6, msg.indexOf("/to ")).strip();
-            String toString = msg.substring(msg.indexOf("/to ") + 4).strip();
+            String desc = getDesc();
+            String fromString = getFromString();
+            String toString = getToString();
             if (desc.isEmpty() || fromString.isEmpty() || toString.isEmpty()) {
                 throw new IllegalArgumentException();
             }
@@ -33,7 +35,7 @@ public class EventCommand implements Command {
                 fromDate = Utils.parseDate(fromString);
                 toDate = Utils.parseDate(toString);
             } catch (DateTimeParseException e) {
-                ui.addLine("Give me the dates in yyyy-mm-dd format.");
+                ui.addLine(INVALID_DATE_FORMAT_MSG);
                 ui.print();
                 return;
             }
@@ -44,9 +46,21 @@ public class EventCommand implements Command {
             ui.addLine("Now your list got " + taskList.size() + " tasks.");
             ui.print();
         } catch (IllegalArgumentException e) {
-            ui.addLine("Your event must have a description and /from and /to time!");
+            ui.addLine(INVALID_ARGS_MSG);
             ui.print();
         }
+    }
+
+    private String getToString() {
+        return msg.substring(msg.indexOf("/to ") + 4).strip();
+    }
+
+    private String getFromString() {
+        return msg.substring(msg.indexOf("/from ") + 6, msg.indexOf("/to ")).strip();
+    }
+
+    private String getDesc() {
+        return msg.substring(6, msg.indexOf("/from ")).strip();
     }
 
     public String toString() {
