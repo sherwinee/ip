@@ -9,6 +9,9 @@ import java.util.Scanner;
  */
 public class Ui {
 
+    public static final String UNKNOWN_COMMAND_MSG = "Alamak! I dont know what that means :/";
+    public static final String EXIT_MSG = "Bye bye! See you again soon ah!";
+    public static final String SAVE_FAILED_MSG = "(Warning: Failed to save to file)";
     private final ArrayList<String> botMsgList = new ArrayList<>();
     private final Scanner scan;
 
@@ -58,16 +61,16 @@ public class Ui {
      */
     public void setDefaultMessage() {
         this.clear();
-        this.addLine("Alamak! I dont know what that means :/");
+        this.addLine(UNKNOWN_COMMAND_MSG);
     }
 
     public void setExitMessage() {
         this.clear();
-        this.addLine("Bye bye! See you again soon ah!");
+        this.addLine(EXIT_MSG);
     }
 
     public void appendSaveFailureMessage() {
         this.addLine("");
-        this.addLine("(Warning: Failed to save to file)");
+        this.addLine(SAVE_FAILED_MSG);
     }
 }
