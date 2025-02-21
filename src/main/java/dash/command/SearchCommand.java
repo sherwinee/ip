@@ -6,6 +6,7 @@ import dash.task.TaskList;
 import java.util.List;
 
 public class SearchCommand implements Command {
+    public static final String INVALID_ARGS_MSG = "Syntax: Search <search string>";
     private final String msg;
 
     public SearchCommand(String msg) {
@@ -17,7 +18,7 @@ public class SearchCommand implements Command {
             if (msg.length() < 8) {
                 throw new IllegalArgumentException();
             }
-            String searchStr = msg.substring(7).strip();
+            String searchStr = getSearchStr();
             if (searchStr.isEmpty()) {
                 throw new IllegalArgumentException();
             }
@@ -25,12 +26,20 @@ public class SearchCommand implements Command {
             if (indices.isEmpty()) {
                 ui.addLine("Cannot find anything with " + searchStr + " leh...");
             } else {
-                indices.forEach(i -> ui.addLine((i + 1) + ". " + taskList.get(i)));
+                updateMatchingIndices(taskList, ui, indices);
             }
             ui.print();
         } catch (IllegalArgumentException e) {
-            ui.addLine("Syntax: Search <search string>");
+            ui.addLine(INVALID_ARGS_MSG);
             ui.print();
         }
+    }
+
+    private static void updateMatchingIndices(TaskList taskList, Ui ui, List<Integer> indices) {
+        indices.forEach(i -> ui.addLine((i + 1) + ". " + taskList.get(i)));
+    }
+
+    private String getSearchStr() {
+        return msg.substring(7).strip();
     }
 }

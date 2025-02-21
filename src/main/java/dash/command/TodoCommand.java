@@ -9,6 +9,8 @@ import dash.Ui;
  * The command to add a new Todo Task.
  */
 public class TodoCommand implements Command {
+    public static final String ADD_SUCC_MSG = "Ok! I add this task already:";
+    public static final String EMPTY_DESC_MSG = "Your todo description cannot be empty!";
     private final String msg;
 
     public TodoCommand(String msg) {
@@ -20,20 +22,24 @@ public class TodoCommand implements Command {
             if (msg.length() < 6) {
                 throw new IllegalArgumentException();
             }
-            String desc = msg.substring(5).strip();
+            String desc = getDesc();
             if (desc.isEmpty()) {
                 throw new IllegalArgumentException();
             }
             Task task = new Todo(desc);
             taskList.add(task);
-            ui.addLine("Ok! I add this task already:");
+            ui.addLine(ADD_SUCC_MSG);
             ui.addLine("  " + task.toString());
             ui.addLine("Now your list got " + taskList.size() + " tasks.");
             ui.print();
         } catch (IllegalArgumentException e) {
-            ui.addLine("Your todo description cannot be empty!");
+            ui.addLine(EMPTY_DESC_MSG);
             ui.print();
         }
+    }
+
+    private String getDesc() {
+        return msg.substring(5).strip();
     }
 
     public String toString() {
