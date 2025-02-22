@@ -22,7 +22,12 @@ public class SearchCommand implements Command {
             if (searchStr.isEmpty()) {
                 throw new IllegalArgumentException();
             }
-            List<Integer> indices = taskList.getIndicesOfTasksFromSearch(searchStr);
+            List<Integer> indices;
+            if (searchStr.charAt(0) == '#') {
+                indices = taskList.getIndicesOfTasksByTag(searchStr.substring(1));
+            } else {
+                indices = taskList.getIndicesOfTasksFromSearch(searchStr);
+            }
             if (indices.isEmpty()) {
                 ui.addLine("Cannot find anything with " + searchStr + " leh...");
             } else {

@@ -57,4 +57,11 @@ public class TaskList {
                 .boxed()
                 .toList();
     }
+
+    public List<Integer> getIndicesOfTasksByTag(String tag) {
+        return IntStream.range(0, taskList.size())
+                .filter(i -> taskList.get(i).hasTag(tag))
+                .boxed()
+                .toList();
+    }
 }
