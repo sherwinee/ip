@@ -89,6 +89,11 @@ public class Storage {
         throw new IllegalArgumentException();
     }
 
+    /**
+     * Parses the string of tags separated by spaces and returns a List of tag Strings
+     * @param tagsString String of tags separated by whitespace characters
+     * @return List of tags (String)
+     */
     private static List<String> parseTags(String tagsString) {
         if (tagsString.isEmpty()) {
             return List.<String>of();

@@ -65,11 +65,17 @@ public class Ui {
         this.addLine(UNKNOWN_COMMAND_MSG);
     }
 
+    /**
+     * Adds the exit message to the ui output buffer
+     */
     public void setExitMessage() {
         this.clear();
         this.addLine(EXIT_MSG);
     }
 
+    /**
+     * Adds the save failure message to the ui output buffer
+     */
     public void appendSaveFailureMessage() {
         this.addLine("");
         this.addLine(SAVE_FAILED_MSG);

@@ -55,6 +55,11 @@ public class EventCommand implements Command {
         }
     }
 
+    /**
+     * Parses tags from user input and returns a List of tag Strings
+     * @return String List of tags
+     * @throws IllegalArgumentException if tags are given in an invalid format
+     */
     private List<String> getTags() throws IllegalArgumentException {
         if (!msg.contains("#")) {
             return List.<String>of();
@@ -71,6 +76,10 @@ public class EventCommand implements Command {
         return allTags.stream().map(tag -> tag.substring(1)).toList();
     }
 
+    /**
+     * Parses the end date string from user input
+     * @return String representation of end date
+     */
     private String getToString() {
         if (msg.contains("#")) {
             return msg.substring(msg.indexOf("/to ") + 4, msg.indexOf("#")).strip();
@@ -78,10 +87,18 @@ public class EventCommand implements Command {
         return msg.substring(msg.indexOf("/to ") + 4).strip();
     }
 
+    /**
+     * Parses the start date string from user input
+     * @return String representation of start date
+     */
     private String getFromString() {
         return msg.substring(msg.indexOf("/from ") + 6, msg.indexOf("/to ")).strip();
     }
 
+    /**
+     * Parses the description from user input
+     * @return Task description
+     */
     private String getDesc() {
         return msg.substring(6, msg.indexOf("/from ")).strip();
     }

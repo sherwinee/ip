@@ -42,6 +42,10 @@ public class TodoCommand implements Command {
         }
     }
 
+    /**
+     * Parses the description from user input
+     * @return Task description
+     */
     private String getDesc() {
         if (msg.contains("#")) {
             return msg.substring(5, msg.indexOf("#")).strip();
@@ -49,6 +53,11 @@ public class TodoCommand implements Command {
         return msg.substring(5).strip();
     }
 
+    /**
+     * Parses tags from user input and returns a List of tag Strings
+     * @return String List of tags
+     * @throws IllegalArgumentException if tags are given in an invalid format
+     */
     private List<String> getTags() throws IllegalArgumentException {
         if (!msg.contains("#")) {
             return List.<String>of();

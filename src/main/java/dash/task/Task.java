@@ -61,6 +61,10 @@ public abstract class Task {
      */
     abstract public String stringify();
 
+    /**
+     * Concatenates tags and separates them with whitespaces
+     * @return String representation of tags
+     */
     public String stringifyTags() {
         return tags.stream().reduce("", (x, y) -> x + (x.isEmpty() ? "" : " ") + y);
     }
