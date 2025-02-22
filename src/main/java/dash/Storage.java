@@ -14,6 +14,7 @@ import java.nio.file.Files;
 import java.nio.file.Paths;
 import java.time.format.DateTimeParseException;
 import java.util.Arrays;
+import java.util.InvalidPropertiesFormatException;
 import java.util.List;
 import java.util.Scanner;
 import java.util.stream.Stream;
@@ -59,33 +60,45 @@ public class Storage {
      */
     public static Task parseTaskFromString(String str) throws IllegalArgumentException, DateTimeParseException {
         String type = str.substring(0, 1);
-        String sep = " \\| ";
-        List<String> fields = Arrays.asList(str.split(sep));
+        String sep = "\\|";
+        List<String> fields = Arrays.asList(str.split(sep, -1));
         fields.forEach(f -> {
-            if (f.isEmpty() || Utils.hasBannedChars(f)) {
+            if (Utils.hasBannedChars(f)) {
                 throw new IllegalArgumentException();
             }
         });
         switch (type) {
         case "T":
-            if (fields.size() != 3) {
-                throw new IllegalArgumentException();
-            }
-            return new Todo(fields.get(2), fields.get(1).equals("1"));
-
-        case "D":
             if (fields.size() != 4) {
                 throw new IllegalArgumentException();
             }
-            return new Deadline(fields.get(2), fields.get(1).equals("1"), Utils.parseDate(fields.get(3)));
+            return new Todo(fields.get(2), parseTags(fields.get(3)), fields.get(1).equals("1"));
 
-        case "E":
+        case "D":
             if (fields.size() != 5) {
                 throw new IllegalArgumentException();
             }
-            return new Event(fields.get(2), fields.get(1).equals("1"), Utils.parseDate(fields.get(3)), Utils.parseDate(fields.get(4)));
+            return new Deadline(fields.get(2), parseTags(fields.get(4)), fields.get(1).equals("1"), Utils.parseDate(fields.get(3)));
+
+        case "E":
+            if (fields.size() != 6) {
+                throw new IllegalArgumentException();
+            }
+            return new Event(fields.get(2), parseTags(fields.get(5)), fields.get(1).equals("1"), Utils.parseDate(fields.get(3)), Utils.parseDate(fields.get(4)));
         }
         throw new IllegalArgumentException();
+    }
+
+    private static List<String> parseTags(String tagsString) {
+        if (tagsString.isEmpty()) {
+            return List.<String>of();
+        }
+        List<String> tags = Arrays.asList(tagsString.split(" "));
+        boolean isInvalid = tags.stream().anyMatch(tag -> tag.isEmpty() || tag.contains("#"));
+        if (isInvalid) {
+            throw new IllegalArgumentException();
+        }
+        return tags;
     }
 
     /**
