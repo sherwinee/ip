@@ -53,7 +53,14 @@ public class TaskList {
 
     public List<Integer> getIndicesOfTasksFromSearch(String searchStr) {
         return IntStream.range(0, taskList.size())
-                .filter(i -> taskList.get(i).contains(searchStr))
+                .filter(i -> taskList.get(i).nameContains(searchStr))
+                .boxed()
+                .toList();
+    }
+
+    public List<Integer> getIndicesOfTasksByTag(String tag) {
+        return IntStream.range(0, taskList.size())
+                .filter(i -> taskList.get(i).hasTag(tag))
                 .boxed()
                 .toList();
     }

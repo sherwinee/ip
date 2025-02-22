@@ -2,6 +2,7 @@ package dash.task;
 
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
+import java.util.List;
 
 /**
  * Represents a Task
@@ -9,14 +10,17 @@ import java.time.format.DateTimeFormatter;
 public abstract class Task {
     protected String description;
     protected boolean isDone;
+    protected List<String> tags;
 
-    public Task(String description) {
+    public Task(String description, List<String> tags) {
         this.description = description;
+        this.tags = tags;
         this.isDone = false;
     }
 
-    public Task(String description, boolean isDone) {
+    public Task(String description, List<String> tags, boolean isDone) {
         this.description = description;
+        this.tags = tags;
         this.isDone = isDone;
     }
 
@@ -57,12 +61,27 @@ public abstract class Task {
      */
     abstract public String stringify();
 
+    public String stringifyTags() {
+        return tags.stream().reduce("", (x, y) -> x + (x.isEmpty() ? "" : " ") + y);
+    }
+
     /**
      * Returns true if the task description contains the given string pattern.
      * @param searchStr The string pattern to search for in taskList
      * @return True if the description contains the given string
      */
-    public boolean contains(String searchStr) {
+    public boolean nameContains(String searchStr) {
         return this.description.contains(searchStr);
+    }
+
+    public boolean hasTag(String tag) {
+        return this.tags.contains(tag);
+    }
+
+    public String getTagString() {
+        return tags.isEmpty() ? "" : "\n        Tags: " +
+                tags.stream()
+                        .map(tag -> "#" + tag)
+                        .reduce("", (x, y) -> x + (x.isEmpty() ? "" : " ") + y);
     }
 }
