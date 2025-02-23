@@ -20,13 +20,13 @@ Dash is a **FREE** chatbot that helps you keep track of tasks and events when yo
 3. Talk to it
 
 ## How to use it
-- `List` - Lists all tasks
-- `Search <name or #tag>` - Search for tasks containing the given string or the full tag.
-- `todo <Description> [#tags]` - Adds a Todo task
-- `deadline <Description> /by <Deadline YYYY-MM-DD> [#tags]` - Adds a Deadline task
-- `event <Description> /from <Start Date YYYY-MM-DD> /to <End Date YYYY-MM-DD> [#tags]` - Adds an Event
+- `list` - Lists all tasks
+- `search <name or #tag>` - Search for tasks containing the given string or the full tag.
+- `todo <description> [#tags]` - Adds a Todo task
+- `deadline <description> /by <Deadline YYYY-MM-DD> [#tags]` - Adds a Deadline task
+- `event <description> /from <Start Date YYYY-MM-DD> /to <End Date YYYY-MM-DD> [#tags]` - Adds an Event
 - `mark <task index>` - Marks the task at the given index as completed
 - `unmark <task index>` - Marks the task at the given index as uncompleted
-- `delete <Index>` - Deletes task at given index
+- `delete <task index>` - Deletes task at given index
 - `deleteall `- Clears entire task list
 - `bye `- Exits the chatbot after 2 seconds. (Or just close the window)
